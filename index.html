@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Anonymous project page for Temporal Ratio and video-action generalization.">
+  <meta name="keywords" content="robot learning, video-action models, world-action models, temporal ratio, compositional generalization">
+  <title>Understanding and Mitigating the Video-Action Generalization Gap via Temporal Ratio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/dreampulse/computer-modern-web-font/master/fonts.css">
+</head>
+
+<body>
+  <div class="outercontainer">
+    <main class="container">
+      <section class="content project-title">
+        <p class="venue">Anonymous Submission</p>
+        <h1>Understanding and Mitigating the<br>Video-Action Generalization Gap via Temporal Ratio</h1>
+        <div class="links" aria-label="Project links">
+          <span class="link-pill muted">Paper coming soon</span>
+          <a class="link-pill" href="#abstract">Abstract</a>
+          <a class="link-pill" href="#videos">Videos</a>
+          <a class="link-pill" href="#performance">Results</a>
+        </div>
+      </section>
+
+      <section class="content teaser">
+        <img src="./materials/figures/pattern_in_chaos.png" alt="Temporal Ratio overview figure">
+      </section>
+
+      <section id="abstract" class="content">
+        <div class="title"><b>Abstract</b></div>
+        <p>
+          Generative video foundation models exhibit strong compositional priors, yet world-action models (WAMs)
+          and video-action models (VAMs) often lose these priors after finetuning on robotic action data. We
+          refer to this discrepancy as the <b>video-action generalization gap</b>. We systematically investigate
+          this gap by evaluating a broad VAM design space, then introduce the <b>Temporal Ratio</b> (TR), an
+          attention-based diagnostic that measures how strongly the action head relies on future latent rollouts
+          relative to the anchored current frame. TR predicts compositional generalization capacity and varies
+          naturally with task phase: it rises during planning and falls during precise manipulation. Based on
+          these findings, we propose TR-Adaptive Guidance, an inference-time method that amplifies compositional
+          video conditioning when the policy relies on future rollouts. On LIBERO and real-world bimanual tasks,
+          this improves compositional OOD performance while preserving ID precision.
+        </p>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>Overview</b></div>
+        <p>
+          We study VAMs that feed partially denoised latent video features into a flow-matching action head.
+          The central question is when the action head uses a generated future as a plan, rather than falling
+          back to the clean current-frame anchor. TR exposes this routing behavior directly from attention,
+          turning a noisy design sweep into a measurable operating regime.
+        </p>
+        <figure class="figure-shell">
+          <img src="./materials/figures/architecture_v2.png" alt="Latent video-action model architecture">
+          <figcaption>Latent VAM architecture used to study video feature extraction and action denoising.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>Noisy Design Space Manifold</b></div>
+        <p>
+          Absolute success rates across backbone adaptation, video noise level, and prediction horizon form a
+          fragmented landscape. TR provides a more mechanistic view: it measures whether future-predictive video
+          features are actually routed into action generation.
+        </p>
+        <figure class="figure-shell accent-blue">
+          <img src="./materials/figures/pattern_in_chaos.png" alt="Fragmented ID and OOD performance landscape">
+          <figcaption>TR turns the apparent design-space noise into an interpretable future-reliance signal.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>How to Measure and Use TR</b></div>
+        <p>
+          At each replan step, the action tokens attend over current-frame video tokens and predicted future
+          video tokens. TR is the ratio of action attention assigned to future frames over the attention assigned
+          to the current frame. We use it both as a diagnostic and as a runtime signal for adaptive guidance.
+        </p>
+        <div class="equation-box">
+          <span>TR = attention over future frames / attention over current frame</span>
+        </div>
+        <figure class="figure-shell accent-green">
+          <img src="./materials/figures/TR_evolution_all.png" alt="Temporal Ratio evolution across execution">
+          <figcaption>TR increases during planning phases and decreases during local manipulation.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>Analyzing the Space</b></div>
+        <p>
+          We vary adaptation strategy, video feature noise level, and temporal horizon. LoRA tends to preserve
+          more pretrained temporal structure than full finetuning; intermediate video noise levels are strongest;
+          and longer rollouts improve video-level plans without always improving action success.
+        </p>
+        <figure class="figure-shell accent-orange">
+          <img src="./materials/figures/paradigm_sigma_horizon_summary.png" alt="Design axes for adaptation strategy, noise level, and horizon">
+          <figcaption>Role of adaptation strategy, noise level, and temporal horizon in ID and OOD success.</figcaption>
+        </figure>
+      </section>
+
+      <section id="videos" class="content">
+        <div class="title"><b>Video-Action Disagreement</b></div>
+        <p>
+          A correct generated future is useful only when the action policy follows it. Conversely, an incorrect
+          generated future may be harmless if the action head anchors to the present observation.
+        </p>
+        <div class="selector-row">
+          <label for="agreement-select">Example</label>
+          <select id="agreement-select" class="prompt-select" onchange="showAgreementVideo(this.value)">
+            <option value="id" selected>ID task: action rejects wrong rollout</option>
+            <option value="ood">OOD task: action ignores correct rollout</option>
+          </select>
+        </div>
+        <div class="media-display two-column">
+          <div id="agreement-video-slot" class="video-card large"></div>
+          <figure class="figure-shell compact">
+            <img src="./materials/figures/video_action_agreement.png" alt="Video-action disagreement examples">
+            <figcaption>Static summary of the two disagreement modes.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>Real Robot Analysis</b></div>
+        <p>
+          The real-world YAM evaluation tests object-goal binding under multiple target and receptacle candidates.
+          The same TR signal used in simulation is used to amplify planning-time video conditioning on the robot.
+        </p>
+        <figure class="figure-shell accent-purple">
+          <img src="./materials/figures/real_world_evaluation.png" alt="Real-world bimanual training and evaluation tasks">
+          <figcaption>Training tasks and compositional OOD evaluation scenes on the bimanual YAM setup.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>ID Demonstrations</b></div>
+        <div class="video-grid grid-3" data-grid="id"></div>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>Single-Task Policy Learning</b></div>
+        <div class="video-grid grid-2" data-grid="single"></div>
+      </section>
+
+      <section class="content">
+        <div class="title"><b>OOD Tasks</b></div>
+        <div class="video-grid grid-3" data-grid="ood"></div>
+      </section>
+
+      <section id="performance" class="content">
+        <div class="title"><b>Performance</b></div>
+        <p>
+          The plots below summarize per-suite LIBERO and real-world performance using a seaborn colorblind
+          palette and the same restrained visual treatment as the rest of the page.
+        </p>
+        <div class="plot-grid">
+          <figure class="figure-shell accent-blue">
+            <img class="optional-image" src="./materials/figures/libero_per_suite_performance.png" alt="LIBERO per-suite performance plot">
+            <figcaption>LIBERO per-suite performance PNG.</figcaption>
+          </figure>
+          <figure class="figure-shell accent-green">
+            <img class="optional-image" src="./materials/figures/real_world_per_suite_performance.png" alt="Real-world per-suite performance plot">
+            <figcaption>Real-world per-suite performance PNG.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="content citation">
+        <div class="title"><b>Citation</b></div>
+        <pre class="bibtex">@inproceedings{anonymous2026temporalratio,
+  title={Understanding and Mitigating the Video-Action Generalization Gap via Temporal Ratio},
+  author={Anonymous},
+  booktitle={Conference on Robot Learning},
+  year={2026}
+}</pre>
+      </section>
+
+      <footer class="content footer">
+        <p>Anonymous project page. Last updated May 2026.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
