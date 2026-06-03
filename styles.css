@@ -110,6 +110,14 @@ p {
   margin-bottom: 0.8rem;
 }
 
+ul {
+  margin: 0 0 0.8rem 1.4rem;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
 img {
   display: block;
   height: auto;
@@ -124,6 +132,16 @@ img {
 
 .teaser img {
   max-height: 520px;
+  width: auto;
+}
+
+.hero-video {
+  background: #111;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: block;
+  max-height: 520px;
+  max-width: 100%;
   width: auto;
 }
 
@@ -179,37 +197,6 @@ figcaption,
   text-align: center;
 }
 
-.selector-row {
-  align-items: center;
-  display: flex;
-  gap: 0.7rem;
-  justify-content: center;
-  margin: 0.75rem 0 0.9rem;
-}
-
-.selector-row label {
-  color: var(--muted);
-  font-size: 0.9em;
-}
-
-.prompt-select {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  color: var(--ink);
-  cursor: pointer;
-  font-family: "Computer Modern Serif", Georgia, serif;
-  font-size: 0.92em;
-  max-width: 100%;
-  min-width: min(520px, 100%);
-  padding: 0.42rem 0.55rem;
-}
-
-.prompt-select:focus {
-  outline: 2px solid var(--blue);
-  outline-offset: 2px;
-}
-
 .media-display.two-column {
   align-items: stretch;
   display: grid;
@@ -241,6 +228,18 @@ figcaption,
   min-height: 100%;
 }
 
+.disagreement-video {
+  display: grid;
+}
+
+.disagreement-video .video-card {
+  height: 100%;
+}
+
+.disagreement-video .video-frame {
+  min-height: 300px;
+}
+
 .video-frame {
   aspect-ratio: 16 / 10;
   background:
@@ -263,6 +262,22 @@ figcaption,
   height: 100%;
   object-fit: cover;
   width: 100%;
+}
+
+/* Generalization clips are shown in full (never cropped): match each frame to the
+   source aspect ratio and contain the video within it. */
+[data-grid="ood"] .video-frame {
+  aspect-ratio: 16 / 9;
+}
+
+[data-grid="imagine"] .video-frame {
+  aspect-ratio: 672 / 176;
+  min-height: 0;
+}
+
+[data-grid="ood"] .demo-video,
+[data-grid="imagine"] .demo-video {
+  object-fit: contain;
 }
 
 .video-fallback {
@@ -313,7 +328,7 @@ figcaption,
 .plot-grid {
   display: grid;
   gap: 0.9rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .optional-placeholder {
@@ -369,18 +384,13 @@ pre.bibtex {
     grid-template-columns: 1fr;
   }
 
-  .selector-row {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .prompt-select {
-    min-width: 100%;
-  }
-
   .teaser img {
     width: 72%;
+  }
+
+  .hero-video {
+    max-height: none;
+    width: 100%;
   }
 }
 

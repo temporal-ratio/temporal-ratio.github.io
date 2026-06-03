@@ -26,7 +26,10 @@
       </section>
 
       <section class="content teaser">
-        <img src="./materials/figures/pattern_in_chaos.png" alt="Temporal Ratio overview figure">
+        <video class="hero-video" controls autoplay muted loop playsinline preload="metadata"
+          poster="./materials/figures/pattern_in_chaos.png">
+          <source src="./final videos/supplementary.mp4" type="video/mp4">
+        </video>
       </section>
 
       <section id="abstract" class="content">
@@ -60,6 +63,29 @@
       </section>
 
       <section class="content">
+        <div class="title"><b>Analyzing the Space</b></div>
+        <p>
+          We characterize the VAM design space along three axes that control how much of the pretrained video
+          prior survives into action generation:
+        </p>
+        <ul>
+          <li><b>Adaptation strategy</b> &mdash; how the pretrained video backbone is finetuned on action data,
+            from lightweight LoRA to full finetuning. LoRA tends to preserve more of the pretrained temporal
+            structure, while full finetuning more readily overwrites it.</li>
+          <li><b>Video feature noise level (&sigma;)</b> &mdash; the diffusion noise level at which the partially
+            denoised latent video features are read out and passed to the action head. Intermediate noise levels
+            are strongest: too clean collapses onto the current frame, too noisy destroys the future plan.</li>
+          <li><b>Temporal horizon</b> &mdash; how far into the future the video model rolls out before
+            conditioning the action. Longer rollouts improve video-level plans, but do not always translate into
+            higher action success.</li>
+        </ul>
+        <figure class="figure-shell accent-orange">
+          <img src="./materials/figures/paradigm_sigma_horizon_summary.png" alt="Design axes for adaptation strategy, noise level, and horizon">
+          <figcaption>Role of adaptation strategy, noise level, and temporal horizon in ID and OOD success.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content">
         <div class="title"><b>Noisy Design Space Manifold</b></div>
         <p>
           Absolute success rates across backbone adaptation, video noise level, and prediction horizon form a
@@ -88,40 +114,22 @@
         </figure>
       </section>
 
+<!-- Video-Action Disagreement: temporarily hidden until the disagreement clip is ready. Restore by uncommenting.
       <section class="content">
-        <div class="title"><b>Analyzing the Space</b></div>
-        <p>
-          We vary adaptation strategy, video feature noise level, and temporal horizon. LoRA tends to preserve
-          more pretrained temporal structure than full finetuning; intermediate video noise levels are strongest;
-          and longer rollouts improve video-level plans without always improving action success.
-        </p>
-        <figure class="figure-shell accent-orange">
-          <img src="./materials/figures/paradigm_sigma_horizon_summary.png" alt="Design axes for adaptation strategy, noise level, and horizon">
-          <figcaption>Role of adaptation strategy, noise level, and temporal horizon in ID and OOD success.</figcaption>
-        </figure>
-      </section>
-
-      <section id="videos" class="content">
         <div class="title"><b>Video-Action Disagreement</b></div>
         <p>
           A correct generated future is useful only when the action policy follows it. Conversely, an incorrect
           generated future may be harmless if the action head anchors to the present observation.
         </p>
-        <div class="selector-row">
-          <label for="agreement-select">Example</label>
-          <select id="agreement-select" class="prompt-select" onchange="showAgreementVideo(this.value)">
-            <option value="id" selected>ID task: action rejects wrong rollout</option>
-            <option value="ood">OOD task: action ignores correct rollout</option>
-          </select>
-        </div>
         <div class="media-display two-column">
-          <div id="agreement-video-slot" class="video-card large"></div>
+          <div class="disagreement-video" data-grid="disagreement"></div>
           <figure class="figure-shell compact">
             <img src="./materials/figures/video_action_agreement.png" alt="Video-action disagreement examples">
             <figcaption>Static summary of the two disagreement modes.</figcaption>
           </figure>
         </div>
       </section>
+      -->
 
       <section class="content">
         <div class="title"><b>Real Robot Analysis</b></div>
@@ -129,20 +137,21 @@
           The real-world YAM evaluation tests object-goal binding under multiple target and receptacle candidates.
           The same TR signal used in simulation is used to amplify planning-time video conditioning on the robot.
         </p>
-        <figure class="figure-shell accent-purple">
-          <img src="./materials/figures/real_world_evaluation.png" alt="Real-world bimanual training and evaluation tasks">
-          <figcaption>Training tasks and compositional OOD evaluation scenes on the bimanual YAM setup.</figcaption>
-        </figure>
       </section>
 
-      <section class="content">
+      <section id="videos" class="content">
         <div class="title"><b>ID Demonstrations</b></div>
         <div class="video-grid grid-3" data-grid="id"></div>
       </section>
 
       <section class="content">
-        <div class="title"><b>Single-Task Policy Learning</b></div>
-        <div class="video-grid grid-2" data-grid="single"></div>
+        <div class="title"><b>Video Models Generalize in Real-World Compositional Scenarios</b></div>
+        <p>
+          Run as a video model only, with no action execution, the generative backbone still imagines coherent
+          futures for novel object and receptacle combinations. This is evidence that the compositional prior
+          survives in the video stream even when the action head does not follow it.
+        </p>
+        <div class="video-grid grid-2" data-grid="imagine"></div>
       </section>
 
       <section class="content">
@@ -153,17 +162,18 @@
       <section id="performance" class="content">
         <div class="title"><b>Performance</b></div>
         <p>
-          The plots below summarize per-suite LIBERO and real-world performance using a seaborn colorblind
-          palette and the same restrained visual treatment as the rest of the page.
+          The grouped bar charts below compare TR-Adaptive Guidance against baselines, reporting success rates on
+          simulation (LIBERO) and real-world (YAM) tasks across in-distribution and compositional
+          out-of-distribution settings.
         </p>
         <div class="plot-grid">
           <figure class="figure-shell accent-blue">
-            <img class="optional-image" src="./materials/figures/libero_per_suite_performance.png" alt="LIBERO per-suite performance plot">
-            <figcaption>LIBERO per-suite performance PNG.</figcaption>
+            <img class="optional-image" src="./materials/figures/sim_results_grouped_bars.png" alt="Simulation (LIBERO) success rate of TR-Adaptive Guidance versus baselines">
+            <figcaption>Simulation (LIBERO): success rate of TR-Adaptive Guidance versus baselines across suites.</figcaption>
           </figure>
           <figure class="figure-shell accent-green">
-            <img class="optional-image" src="./materials/figures/real_world_per_suite_performance.png" alt="Real-world per-suite performance plot">
-            <figcaption>Real-world per-suite performance PNG.</figcaption>
+            <img class="optional-image" src="./materials/figures/yam_results_grouped_bars.png" alt="Real-world (YAM) success rate of TR-Adaptive Guidance versus baselines">
+            <figcaption>Real-world (YAM): success rate of TR-Adaptive Guidance versus baselines across tasks.</figcaption>
           </figure>
         </div>
       </section>
