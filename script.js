@@ -4,31 +4,34 @@
 // SRC: path to the video file (spaces are URL-encoded automatically on load).
 const videoGroups = {
   // In-distribution demonstrations: training multi-task + finetuning.
+  // Captions are the matching PP24 training-task instructions (real-world setup appendix).
   id: [
-    ["Plates into bin", "./final videos/training multi-task/plates_into_bin.mp4"],
-    ["Bottles into bin", "./final videos/training multi-task/bottles_into_bin.mp4"],
-    ["Chips into paper bag", "./final videos/training multi-task/chips_into_paper_bag.mp4"],
-    ["Chips on shelf", "./final videos/training multi-task/chips_on_shelf.mp4"],
-    ["Dishes out of drying rack", "./final videos/training multi-task/dishes_out_of_drying_rack.mp4"],
-    ["Bottle out of paper bag", "./final videos/training multi-task/bottle_out_of_paper_bag.mp4"],
-    ["Bottle unscrewing", "./final videos/finetuning/bottle_unscrewing.mp4"],
-    ["Folding", "./final videos/finetuning/folding.mp4"]
+    ["Place plates into a plastic bin", "./final videos/training multi-task/plates_into_bin.mp4"],
+    ["Throw plastic bottles into a bin", "./final videos/training multi-task/bottles_into_bin.mp4"],
+    ["Place snacks into a paper bag", "./final videos/training multi-task/chips_into_paper_bag.mp4"],
+    ["Place and organize chip bags on a shelf", "./final videos/training multi-task/chips_on_shelf.mp4"],
+    ["Unload mixed dishes from a tabletop dish rack", "./final videos/training multi-task/dishes_out_of_drying_rack.mp4"],
+    ["Take the bottle out of the paper bag", "./final videos/training multi-task/bottle_out_of_paper_bag.mp4"],
+    ["Unscrew bottle caps (Finetuned)", "./final videos/finetuning/bottle_unscrewing.mp4"],
+    ["Fold a pile of t-shirts and stack them (Finetuned)", "./final videos/finetuning/folding.mp4"]
   ],
   // Video-model-only rollouts (imagined futures, no action execution).
   imagine: [
-    ["Imagined rollout 1", "./final videos/imagine/1.mp4"],
-    ["Imagined rollout 2", "./final videos/imagine/2.mp4"]
+    ["Same scene, different prompt 1", "./final videos/imagine/1.mp4"],
+    ["Same scene, different prompt 2", "./final videos/imagine/2.mp4"]
   ],
   // Out-of-distribution / compositional generalization.
+  // Captions are the eight real-world compositional evaluation tasks (Tasks 1-8).
+  // bbin = "throw away into the bin", bin = "place into the bin".
   ood: [
-    ["Bottle to bbin", "./final videos/generalization/bottle-bbin.mp4"],
-    ["Bottle to paper bag", "./final videos/generalization/bottle-paper.mp4"],
-    ["Chip to shelf", "./final videos/generalization/chip-shelf.mp4"],
-    ["Chips to bbin", "./final videos/generalization/chips-bbin.mp4"],
-    ["Chips to bin", "./final videos/generalization/chips-bin.mp4"],
-    ["Chips to paper bag", "./final videos/generalization/chips-paper.mp4"],
-    ["Fruits to bbin", "./final videos/generalization/fruits-bbin.mp4"],
-    ["Fruits to paper bag", "./final videos/generalization/fruits-paper.mp4"]
+    ["Throw away the fruits into the bin", "./final videos/generalization/fruits-bbin.mp4"],
+    ["Place the fruits into the paper bag", "./final videos/generalization/fruits-paper.mp4"],
+    ["Throw away the plastic bottle into the bin (seen prompt)", "./final videos/generalization/bottle-bbin.mp4"],
+    ["Place plastic bottle into the paper bag", "./final videos/generalization/bottle-paper.mp4"],
+    ["Place snacks into the paper bag (seen prompt)", "./final videos/generalization/chips-paper.mp4"],
+    ["Throw away the snacks into the bin", "./final videos/generalization/chips-bbin.mp4"],
+    ["Arrange snacks on the shelf (seen prompt)", "./final videos/generalization/chip-shelf.mp4"],
+    ["Place snacks into the bin", "./final videos/generalization/chips-bin.mp4"]
   ],
   // Video-action disagreement example (single clip — to be supplied).
   disagreement: [
