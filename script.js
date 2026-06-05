@@ -13,7 +13,7 @@ const videoGroups = {
     ["Unload mixed dishes from a tabletop dish rack", "./final videos/training multi-task/dishes_out_of_drying_rack.mp4"],
     ["Take the bottle out of the paper bag", "./final videos/training multi-task/bottle_out_of_paper_bag.mp4"],
     ["Unscrew bottle caps (Finetuned)", "./final videos/finetuning/bottle_unscrewing.mp4"],
-    ["Fold a pile of t-shirts and stack them (Finetuned)", "./final videos/finetuning/folding.mp4"]
+    ["Fold a pile of t-shirts and stack them (Finetuned, 30&times;)", "./final videos/finetuning/folding.mp4"]
   ],
   // Video-model-only rollouts (imagined futures, no action execution).
   imagine: [
