@@ -1,2 +1,5 @@
 # macOS
 .DS_Store
+
+# Local editor/agent settings (never publish)
+.claude/settings.local.json
